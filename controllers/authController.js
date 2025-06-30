@@ -10,7 +10,7 @@ export const register = async (req, res) => {
     if (existing) return res.status(400).json({ message: "Користувач вже існує" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ email, passwordHash: hashedPassword, role });
+    const user = new User({ email, password: hashedPassword, role });
     await user.save();
     res.status(201).json({ message: "User created" });
   } catch (err) {
@@ -20,12 +20,13 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+    console.log("Login request body:", req.body);
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
