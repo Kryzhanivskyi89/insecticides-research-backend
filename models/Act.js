@@ -43,40 +43,48 @@ const ActivitySchema = new mongoose.Schema({
   ],
 });
 
+const SampleInfoSchema = new mongoose.Schema({
+  name: String,
+  subtype: String,
+  base: String,
+  date: String,
+  quantity: String,
+  unit: String,
+  form: String,
+  state: String,
+  concentration: String,
+  ph: Number,
+  titerInitial: String,
+  titerStorage: String,
+});
+
 const ActSchema = new mongoose.Schema({
-  actNumber: String,
-  year: String,
-  actDate: String,
-  receivedDate: String,
-  transferredBy: String,
-  samples: [
-    {
-      name: String,
-      subtype: String,
-      base: String,
-      date: String,
-      quantity: String,
-      unit: String,
-      form: String,
-      state: String,
-      concentration: String,
-      ph: Number,
-      titerInitial: String,
-      titerStorage: String,
-    },
-  ],
+  actNumber: { type: String, default: "" },
+  year: { type: String, default: "" },
+  actDate: { type: String, default: "" },
+  receivedDate: { type: String, default: "" },
+  transferredBy: { type: String, default: "" },
+  executor: { type: String, default: "" }, // Виконавець (з фронту)
+  samples: { type: [SampleInfoSchema], default: [] },
   experiment: {
-    layingDate: String,
-    control: ControlSchema,
-    samplesData: [SampleSchema],
+    layingDate: { type: String, default: "" },
+    control: { type: ControlSchema, default: () => ({}) },
+    samplesData: { type: [SampleSchema], default: [] },
   },
-  activityData: [ActivitySchema],
-  conclusion: String,
+  activityData: {
+    type: [ActivitySchema],
+    default: []
+  },
+  conclusion: {
+    type: String,
+    default: ""
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    default: null
   },
-});
+}, { timestamps: true });
 
 const Act = mongoose.model("Act", ActSchema);
 export default Act;
