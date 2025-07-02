@@ -34,7 +34,7 @@ export const registerAct = async (req, res) => {
       act.samples = samples || act.samples;
 
       const updated = await act.save();
-      return res.status(200).json({ updated: true, act: updated });
+      return res.status(200).json({ created: false, act: updated });
     } else {
       const newAct = new Act({
         actNumber,
