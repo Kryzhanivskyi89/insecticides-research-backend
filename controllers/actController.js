@@ -13,6 +13,18 @@ export const getAllActs = async (req, res) => {
   }
 };
 
+export const getActById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const act = await Act.findById(id).populate("createdBy", "name");
+    if (!act) return res.status(404).json({ message: "Акт не знайдено" });
+    res.json(act);
+  } catch (err) {
+    console.error("Помилка при отриманні акту:", err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+};
+
 // Створити або оновити акт за actNumber
 export const registerAct = async (req, res) => {
   try {
@@ -31,6 +43,7 @@ export const registerAct = async (req, res) => {
       act.receivedDate = actInfo.receivedDate || act.receivedDate;
       act.transferredBy = actInfo.transferredBy || act.transferredBy;
       act.executor = actInfo.executor || act.executor;
+      act.status = actInfo.status || act.status;
       act.samples = samples || act.samples;
 
       const updated = await act.save();
@@ -43,6 +56,7 @@ export const registerAct = async (req, res) => {
         receivedDate: actInfo.receivedDate || "",
         transferredBy: actInfo.transferredBy || "",
         executor: actInfo.executor || "",
+        status: actInfo.status || "todo",
         samples,
         createdBy: req.user.userId,
       });
