@@ -10,10 +10,11 @@ import {
 
 const router = express.Router();
 
-router.get("/", authenticate, authorizeRoles("admin", "worker", "viewer"), getAllActs);
-router.get("/:id", authenticate, authorizeRoles("admin", "worker", "viewer"), getActById);
 router.post("/register", authenticate, authorizeRoles("admin", "worker"), registerAct);
 router.post("/results/:id", authenticate, authorizeRoles("admin", "worker"), saveResults);
 router.put("/:id", authenticate, authorizeRoles("admin", "worker"), updateAct);
+
+router.get("/", authenticate, authorizeRoles("admin", "worker", "viewer"), getAllActs);
+router.get("/:id", authenticate, authorizeRoles("admin", "worker", "viewer"), getActById);
 
 export default router;

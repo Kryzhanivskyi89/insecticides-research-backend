@@ -16,6 +16,7 @@ export const getAllActs = async (req, res) => {
 export const getActById = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("Отримано ID:", req.params.id);
     const act = await Act.findById(id).populate("createdBy", "name");
     if (!act) return res.status(404).json({ message: "Акт не знайдено" });
     res.json(act);
