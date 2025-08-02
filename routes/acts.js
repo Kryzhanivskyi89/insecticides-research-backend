@@ -14,6 +14,8 @@ router.post("/register", authenticate, authorizeRoles("admin", "worker"), regist
 router.post("/results/:id", authenticate, authorizeRoles("admin", "worker"), saveResults);
 router.put("/:id", authenticate, authorizeRoles("admin", "worker"), updateAct);
 
+router.patch("/:id", authenticate, authorizeRoles("admin", "worker"), updateAct);
+
 router.get("/", authenticate, authorizeRoles("admin", "worker", "viewer"), getAllActs);
 router.get("/:id", authenticate, authorizeRoles("admin", "worker", "viewer"), getActById);
 

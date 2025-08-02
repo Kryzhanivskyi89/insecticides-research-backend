@@ -65,6 +65,11 @@ const ActSchema = new mongoose.Schema({
   receivedDate: { type: String, default: "" },
   transferredBy: { type: String, default: "" },
   executor: { type: String, default: "" }, // Виконавець (з фронту)
+  status: {
+    type: String,
+    enum: ['todo', 'in progress', 'done', 'archived'],
+    default: 'todo',
+  },
   samples: { type: [SampleInfoSchema], default: [] },
   experiment: {
     layingDate: { type: String, default: "" },
