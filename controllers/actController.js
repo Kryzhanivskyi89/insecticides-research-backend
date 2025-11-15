@@ -119,3 +119,40 @@ export const updateAct = async (req, res) => {
     res.status(500).json({ message: "Помилка сервера" });
   }
 };
+
+export const searchActs = async (req, res) => {
+    try {
+        const { query } = req.query;
+        
+        // Якщо запит порожній, повертаємо всі акти
+        if (!query) {
+            const allActs = await Act.find().populate('samples');
+            return res.json(allActs);
+        }
+
+        // Створюємо масив умов для оператора $or
+        const orConditions = [];
+
+        // Перевіряємо, чи є запит числом, щоб коректно шукати по actNumber
+        const numQuery = Number(query);
+        if (!isNaN(numQuery)) {
+            orConditions.push({ actNumber: numQuery });
+        }
+        
+        // Додаємо умови для пошуку за текстовими полями
+        // Використовуємо регулярний вираз для пошуку без урахування регістру
+        orConditions.push(
+            { 'customer.name': { $regex: query, $options: 'i' } },
+            { 'samples.name': { $regex: query, $options: 'i' } }
+        );
+
+        // Виконуємо пошук з використанням об'єднаних умов
+        const acts = await Act.find({ $or: orConditions }).populate('samples');
+
+        res.json(acts);
+
+    } catch (error) {
+        console.error("Помилка в контролері пошуку:", error);
+        res.status(500).json({ message: "Внутрішня помилка сервера", error: error.message });
+    }
+};

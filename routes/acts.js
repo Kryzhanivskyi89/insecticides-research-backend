@@ -6,6 +6,7 @@ import {
   saveResults,
   updateAct,
   getActById,
+  searchActs,
 } from "../controllers/actController.js";
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.post("/results/:id", authenticate, authorizeRoles("admin", "worker"), sav
 router.put("/:id", authenticate, authorizeRoles("admin", "worker"), updateAct);
 
 router.patch("/:id", authenticate, authorizeRoles("admin", "worker"), updateAct);
+router.get("/search", authenticate, authorizeRoles("admin", "worker", "viewer"), searchActs); 
 
 router.get("/", authenticate, authorizeRoles("admin", "worker", "viewer"), getAllActs);
 router.get("/:id", authenticate, authorizeRoles("admin", "worker", "viewer"), getActById);
